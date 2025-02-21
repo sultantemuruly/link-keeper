@@ -19,18 +19,18 @@ model User {
   email   String  @unique
   name    String?
 
-  // A user can have many links.
-  links Link[]
+  // one user can have multiple links
+  links Link[] @relation("UserLinks")
 }
 
 model Link {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  title   String
-  url     String
-  about   String?
-  savedAt DateTime @default(now())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  url         String
+  description String?
+  savedAt     DateTime @default(now())
 
-  // Foreign key to connect the link to its user.
+  // creating relationship between tables
   userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], name: "UserLinks")
 }
