@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/custom/Header";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Link Keeper",
@@ -19,6 +20,7 @@ export default function RootLayout({
         <body>
           <Header />
           {children}
+          <Toaster closeButton />
         </body>
       </html>
     </ClerkProvider>

@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+
 import {
   Form,
   FormControl,
@@ -21,11 +22,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@clerk/nextjs";
-
+import { toast } from "sonner";
 import { Loader, Plus, Trash2 } from "lucide-react";
+
+import { useAuth } from "@clerk/nextjs";
 
 // Define form schema
 const formSchema = z.object({
@@ -50,10 +65,11 @@ type LinkFormData = {
 
 export default function LinksPage() {
   const { userId } = useAuth();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
   const [links, setLinks] = useState<Link[]>([]); // Store fetched links
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -77,8 +93,8 @@ export default function LinksPage() {
 
       const data = await response.json();
       setLinks(data);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
       setError("Could not load links.");
     } finally {
       setLoading(false);
@@ -106,9 +122,13 @@ export default function LinksPage() {
       setLinks((prevLinks) => [newLink, ...prevLinks]); // Add new link to UI
       setOpen(false);
       form.reset(); // Reset form after submission
+
+      toast.success("Link saved successfully!");
     } catch (err) {
       console.error("Error submitting form:", err);
       setError("Failed to save link.");
+
+      toast.error("Failed to save link.");
     }
   };
 
@@ -126,9 +146,12 @@ export default function LinksPage() {
       }
 
       if (userId) fetchLinks();
+
+      toast.success("Link deleted successfully!");
     } catch (err) {
       console.error("Error deleting link:", err);
       setError("Failed to delete link.");
+      toast.error("Failed to delete link.");
     }
   };
 
@@ -235,13 +258,35 @@ export default function LinksPage() {
                 <p className="text-sm text-gray-600">{link.description}</p>
               </div>
               <div className="flex flex-col items-center gap-2">
-                <Button
+                {/* <Button
                   variant={"destructive"}
                   onClick={() => handleDelete(link.id)}
                 >
                   <Trash2 size={16} />
                   Delete
-                </Button>
+                </Button> */}
+                <AlertDialog>
+                  <AlertDialogTrigger className="flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 py-2 px-4 rounded-sm">
+                    <Trash2 size={16} />
+                    Delete
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        You will not be able to retrieve the link later
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDelete(link.id)}>
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
                 <p className="text-xs text-gray-500">
                   Saved at: {new Date(link.savedAt).toLocaleString()}
                 </p>
