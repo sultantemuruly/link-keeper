@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogTrigger,
@@ -26,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@clerk/nextjs";
 
-import { Loader } from "lucide-react";
+import { Loader, Plus, Trash2 } from "lucide-react";
 
 // Define form schema
 const formSchema = z.object({
@@ -66,27 +65,27 @@ export default function LinksPage() {
   });
 
   // Fetch user's links on page load
+  const fetchLinks = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/links", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch links");
+
+      const data = await response.json();
+      setLinks(data);
+    } catch (error) {
+      console.log(error);
+      setError("Could not load links.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchLinks = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/links", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!response.ok) throw new Error("Failed to fetch links");
-
-        const data = await response.json();
-        setLinks(data);
-      } catch (error) {
-        console.log(error);
-        setError("Could not load links.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (userId) fetchLinks(); // Fetch only if user is authenticated
   }, [userId]);
 
@@ -110,6 +109,26 @@ export default function LinksPage() {
     } catch (err) {
       console.error("Error submitting form:", err);
       setError("Failed to save link.");
+    }
+  };
+
+  // handle deletion of links
+  const handleDelete = async (linkId: string) => {
+    try {
+      const response = await fetch("/api/links", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ linkId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete link");
+      }
+
+      if (userId) fetchLinks();
+    } catch (err) {
+      console.error("Error deleting link:", err);
+      setError("Failed to delete link.");
     }
   };
 
@@ -199,7 +218,7 @@ export default function LinksPage() {
       {/* Loading Indicator */}
       {loading ? (
         <div className="flex justify-center items-center">
-          <Loader />
+          <Loader className="animate-spin" />
           <p>Loading links...</p>
         </div>
       ) : (
@@ -215,9 +234,18 @@ export default function LinksPage() {
                 </a>
                 <p className="text-sm text-gray-600">{link.description}</p>
               </div>
-              <p className="text-xs text-gray-500">
-                Saved at: {new Date(link.savedAt).toLocaleString()}
-              </p>
+              <div className="flex flex-col items-center gap-2">
+                <Button
+                  variant={"destructive"}
+                  onClick={() => handleDelete(link.id)}
+                >
+                  <Trash2 size={16} />
+                  Delete
+                </Button>
+                <p className="text-xs text-gray-500">
+                  Saved at: {new Date(link.savedAt).toLocaleString()}
+                </p>
+              </div>
             </li>
           ))}
         </ul>

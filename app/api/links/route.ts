@@ -70,3 +70,47 @@ export async function GET() {
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const body = await req.json();
+    const { linkId } = body;
+
+    if (!linkId) {
+      return new NextResponse("Incorrect linkId", { status: 400 });
+    }
+
+    const link = await prisma.link.findUnique({
+      where: { id: linkId },
+    });
+
+    if (!link) {
+      return new NextResponse("Link not found", { status: 404 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
+
+    if (!user || link.userId !== user.id) {
+      return new NextResponse("Unauthorized to delete this link", {
+        status: 403,
+      });
+    }
+
+    await prisma.link.delete({
+      where: { id: linkId },
+    });
+
+    return new NextResponse("Link deleted successfully", { status: 200 });
+  } catch (error) {
+    console.error("[LINKS_DELETE]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
