@@ -38,7 +38,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Loader, Plus, Trash2 } from "lucide-react";
+import { Loader, Plus, Trash2, Search } from "lucide-react";
 
 import { useAuth } from "@clerk/nextjs";
 
@@ -66,10 +66,10 @@ type LinkFormData = {
 export default function LinksPage() {
   const { userId } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
   const [links, setLinks] = useState<Link[]>([]); // Store fetched links
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -155,10 +155,26 @@ export default function LinksPage() {
     }
   };
 
+  const filteredLinks = links.filter((link) =>
+    link.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="px-20">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Your Links</h1>
+
+        <div className="mt-4 mb-6">
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search links by title..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8"
+            />
+          </div>
+        </div>
 
         {/* Add Link Button */}
         <Dialog open={open} onOpenChange={setOpen}>
@@ -238,7 +254,7 @@ export default function LinksPage() {
       {/* Error Message */}
       {error && <p className="text-red-500">{error}</p>}
 
-      {/* Loading Indicator */}
+      {/* Loading Indicator and Links Display */}
       {loading ? (
         <div className="flex justify-center items-center">
           <Loader className="animate-spin" />
@@ -246,53 +262,61 @@ export default function LinksPage() {
         </div>
       ) : (
         <ul className="mt-4">
-          {links.map((link: Link) => (
-            <li
-              key={link.id}
-              className="p-3 border-b flex justify-between items-center"
-            >
-              <div>
-                <a href={link.url} target="_blank" rel="noopener noreferrer">
-                  <h2 className="font-semibold">{link.title}</h2>
-                </a>
-                <p className="text-sm text-gray-600">{link.description}</p>
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                {/* <Button
-                  variant={"destructive"}
-                  onClick={() => handleDelete(link.id)}
-                >
-                  <Trash2 size={16} />
-                  Delete
-                </Button> */}
-                <AlertDialog>
-                  <AlertDialogTrigger className="flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 py-2 px-4 rounded-sm">
-                    <Trash2 size={16} />
-                    Delete
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        You will not be able to retrieve the link later
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDelete(link.id)}>
-                        Continue
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-                <p className="text-xs text-gray-500">
-                  Saved at: {new Date(link.savedAt).toLocaleString()}
-                </p>
-              </div>
-            </li>
-          ))}
+          {filteredLinks.length === 0 ? (
+            <p className="text-center text-gray-500 mt-4">
+              No links found matching {searchQuery}
+            </p>
+          ) : (
+            filteredLinks.map((link: Link) => (
+              <li
+                key={link.id}
+                className="p-3 border-b flex justify-between items-center hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex-1">
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-blue-600 transition-colors"
+                  >
+                    <h2 className="font-semibold">{link.title}</h2>
+                  </a>
+                  {link.description && (
+                    <p className="text-sm text-gray-600">{link.description}</p>
+                  )}
+                </div>
+                <div className="flex flex-col items-end gap-2 ml-4">
+                  <AlertDialog>
+                    <AlertDialogTrigger className="flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 py-2 px-4 rounded-sm transition-colors">
+                      <Trash2 size={16} />
+                      Delete
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          You will not be able to retrieve the link later
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDelete(link.id)}
+                        >
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                  <p className="text-xs text-gray-500">
+                    Saved at: {new Date(link.savedAt).toLocaleString()}
+                  </p>
+                </div>
+              </li>
+            ))
+          )}
         </ul>
       )}
     </div>
