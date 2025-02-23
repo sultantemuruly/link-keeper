@@ -10,10 +10,14 @@ const Header = () => {
   const pathname = usePathname();
 
   return (
-    <div className="py-8 px-20 flex justify-between items-center">
+    <div className="py-8 px-10 md:px-20 flex justify-between items-center">
       <div className="flex items-center gap-2">
-        <FileHeart width={32} height={32} />
-        <h1 className="text-xl">Link Keeper</h1>
+        <FileHeart
+          width={32}
+          height={32}
+          className="min-w-[26px] flex-shrink-0"
+        />
+        <h1 className="text-md md:text-xl">Link Keeper</h1>
       </div>
       <div className="flex items-center gap-2">
         {pathname === "/links" ? (
@@ -27,7 +31,7 @@ const Header = () => {
         ) : (
           <Button
             variant="ghost"
-            className="text-xl"
+            className="text-md md:text-xl"
             onClick={() => router.push("/links")}
           >
             My Links

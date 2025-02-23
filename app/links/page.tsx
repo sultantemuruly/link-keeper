@@ -160,15 +160,17 @@ export default function LinksPage() {
   );
 
   return (
-    <div className="px-20">
+    <div className="px-10 md:px-20">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Your Links</h1>
+        <h1 className="text-lg md:text-2xl font-semibold md:font-bold">
+          Your Links
+        </h1>
 
         <div className="mt-4 mb-6">
           <div className="relative">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search links by title..."
+              placeholder="Search by title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8"
@@ -184,7 +186,9 @@ export default function LinksPage() {
               className="flex items-center text-xl"
               onClick={() => setOpen(true)}
             >
-              <div>Add</div>
+              <div className="text-lg md:text-2xl font-medium md:font-semibold">
+                Add
+              </div>
               <Plus strokeWidth={4} />
             </Button>
           </DialogTrigger>
