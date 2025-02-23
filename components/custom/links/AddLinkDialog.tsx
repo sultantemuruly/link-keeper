@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+
 import {
   Form,
   FormControl,
@@ -18,6 +19,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
@@ -25,9 +34,10 @@ import { toast } from "sonner";
 import { LinkFormData } from "./types";
 
 const formSchema = z.object({
-  title: z.string().min(2, "Title must be at least 2 characters"),
-  url: z.string().url("Invalid URL address"),
+  title: z.string().min(1),
+  url: z.string().url(),
   description: z.string().optional(),
+  category: z.string().optional(),
 });
 
 interface AddLinkDialogProps {
@@ -42,6 +52,7 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
       title: "",
       url: "",
       description: "",
+      category: "",
     },
   });
 
@@ -80,13 +91,10 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
           <Plus strokeWidth={4} />
         </Button>
       </DialogTrigger>
-
-      {/* Add Link Form */}
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Add a New Link</DialogTitle>
         </DialogHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -102,7 +110,6 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="url"
@@ -116,7 +123,44 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
                 </FormItem>
               )}
             />
-
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select categories" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="None">None</SelectItem>
+                      <SelectItem value="Work">Work</SelectItem>
+                      <SelectItem value="Personal">Personal</SelectItem>
+                      <SelectItem value="Education">Education</SelectItem>
+                      <SelectItem value="Entertainment">
+                        Entertainment
+                      </SelectItem>
+                      <SelectItem value="Music">Music</SelectItem>
+                      <SelectItem value="Youtube">Youtube</SelectItem>
+                      <SelectItem value="Inspiration">Inspiration</SelectItem>
+                      <SelectItem value="Sport">Sport</SelectItem>
+                      <SelectItem value="Fun">Fun</SelectItem>
+                      <SelectItem value="Hobby">Hobby</SelectItem>
+                      <SelectItem value="Style">Style</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="description"
@@ -130,7 +174,6 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
                 </FormItem>
               )}
             />
-
             <DialogFooter>
               <Button type="submit">Submit</Button>
             </DialogFooter>

@@ -28,6 +28,7 @@ model Link {
     title       String
     url         String
     description String?
+    category    String?
     savedAt     DateTime @default(now())
 
     // creating relationship between tables

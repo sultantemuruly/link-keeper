@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, url, description } = body;
+    const { title, url, description, category } = body;
 
     const user = await prisma.user.findUnique({
       where: {
@@ -28,6 +28,7 @@ export async function POST(req: Request) {
         title,
         url,
         description,
+        category,
         userId: user.id,
       },
     });
