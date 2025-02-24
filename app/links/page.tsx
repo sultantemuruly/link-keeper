@@ -55,7 +55,7 @@ export default function LinksPage() {
   );
 
   return (
-    <div className="px-10 md:px-20">
+    <div className="pt-10 px-10 md:px-20">
       <div className="flex justify-between items-center">
         <h1 className="text-lg md:text-2xl font-semibold md:font-bold">
           Your Links

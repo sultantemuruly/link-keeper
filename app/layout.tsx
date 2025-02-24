@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/custom/Header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
+import Footer from "@/components/custom/Footer";
 
 export const metadata: Metadata = {
   title: "Link Keeper",
@@ -21,6 +22,7 @@ export default function RootLayout({
           <Header />
           {children}
           <Toaster closeButton />
+          <Footer />
         </body>
       </html>
     </ClerkProvider>

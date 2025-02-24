@@ -10,7 +10,7 @@ const Header = () => {
   const pathname = usePathname();
 
   return (
-    <div className="py-8 px-10 md:px-20 flex justify-between items-center">
+    <div className="pt-6 pb-4 px-10 md:px-20 flex justify-between items-center shadow-md">
       <div className="flex items-center gap-2">
         <FileHeart
           width={32}
@@ -38,9 +38,7 @@ const Header = () => {
           </Button>
         )}
 
-        {/* Show sign in button if the user is not authenticated */}
         <SignedOut>
-          {/* Wrap your custom button with SignInButton for modal functionality */}
           <SignInButton mode="modal">
             <Button variant="ghost" className="text-xl">
               Sign in
@@ -48,7 +46,6 @@ const Header = () => {
           </SignInButton>
         </SignedOut>
 
-        {/* Show the user button if the user is signed in */}
         <SignedIn>
           <UserButton />
         </SignedIn>
