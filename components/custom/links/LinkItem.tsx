@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Trash2 } from "lucide-react";
 import { Link } from "./types";
+import { Categories } from "./constants";
 
 interface LinkItemProps {
   link: Link;
@@ -50,7 +51,7 @@ export function LinkItem({
       <div className="flex items-center gap-4">
         <div>
           <Select
-            defaultValue={link.category || "None"}
+            defaultValue={link.category}
             onValueChange={(value) => handleCategoryChange(link.id, value)}
           >
             <SelectTrigger>
@@ -59,19 +60,11 @@ export function LinkItem({
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Category</SelectLabel>
-                <SelectItem value="None">None</SelectItem>
-                <SelectItem value="Work">Work</SelectItem>
-                <SelectItem value="Personal">Personal</SelectItem>
-                <SelectItem value="Education">Education</SelectItem>
-                <SelectItem value="Entertainment">Entertainment</SelectItem>
-                <SelectItem value="Music">Music</SelectItem>
-                <SelectItem value="Youtube">Youtube</SelectItem>
-                <SelectItem value="Inspiration">Inspiration</SelectItem>
-                <SelectItem value="Sport">Sport</SelectItem>
-                <SelectItem value="Fun">Fun</SelectItem>
-                <SelectItem value="Hobby">Hobby</SelectItem>
-                <SelectItem value="Style">Style</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
+                {Categories.map((category, id) => (
+                  <SelectItem key={id} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>

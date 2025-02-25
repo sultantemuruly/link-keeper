@@ -32,6 +32,7 @@ import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { LinkFormData } from "./types";
+import { Categories } from "./constants";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -85,10 +86,8 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
           className="flex items-center text-xl"
           onClick={() => setOpen(true)}
         >
-          <div className="text-lg md:text-2xl font-medium md:font-semibold">
-            Add
-          </div>
-          <Plus strokeWidth={4} />
+          <div className="text-md md:text-xl font-medium">Add</div>
+          <Plus strokeWidth={3} />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">
@@ -131,7 +130,7 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
                   <FormLabel>Category</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={field.value || "None"}
                     value={field.value}
                   >
                     <FormControl>
@@ -140,21 +139,11 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="None">None</SelectItem>
-                      <SelectItem value="Work">Work</SelectItem>
-                      <SelectItem value="Personal">Personal</SelectItem>
-                      <SelectItem value="Education">Education</SelectItem>
-                      <SelectItem value="Entertainment">
-                        Entertainment
-                      </SelectItem>
-                      <SelectItem value="Music">Music</SelectItem>
-                      <SelectItem value="Youtube">Youtube</SelectItem>
-                      <SelectItem value="Inspiration">Inspiration</SelectItem>
-                      <SelectItem value="Sport">Sport</SelectItem>
-                      <SelectItem value="Fun">Fun</SelectItem>
-                      <SelectItem value="Hobby">Hobby</SelectItem>
-                      <SelectItem value="Style">Style</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
+                      {Categories.map((category, id) => (
+                        <SelectItem key={id} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />

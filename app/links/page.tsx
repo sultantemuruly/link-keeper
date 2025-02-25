@@ -7,6 +7,7 @@ import { AddLinkDialog } from "@/components/custom/links/AddLinkDialog";
 import { LinkItem } from "@/components/custom/links/LinkItem";
 import { SearchBar } from "@/components/custom/links/SearchBar";
 import { Link } from "@/components/custom/links/types";
+import { FilterBy } from "@/components/custom/links/FilterBy";
 
 export default function LinksPage() {
   const { userId } = useAuth();
@@ -14,6 +15,7 @@ export default function LinksPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filterCategory, setFilterCategory] = useState<string>("None");
 
   const fetchLinks = async () => {
     try {
@@ -66,9 +68,22 @@ export default function LinksPage() {
     }
   };
 
-  const filteredLinks = links.filter((link) =>
-    link.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleFilterCategory = async (category: string) => {
+    setFilterCategory(category);
+  };
+
+  const filteredLinks = links.filter((link) => {
+    const titleMatch = link.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const categoryMatch =
+      filterCategory &&
+      filterCategory.trim() !== "" &&
+      filterCategory.toLowerCase() !== "none"
+        ? link.category.toLowerCase().includes(filterCategory.toLowerCase())
+        : true;
+    return titleMatch && categoryMatch;
+  });
 
   return (
     <div className="pt-10 px-10 md:px-20">
@@ -77,9 +92,12 @@ export default function LinksPage() {
           Your Links
         </h1>
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
-        <AddLinkDialog
-          onLinkAdded={(newLink) => setLinks((prev) => [newLink, ...prev])}
-        />
+        <div className="flex items-center gap-10">
+          <FilterBy handleFilterCategory={handleFilterCategory} />
+          <AddLinkDialog
+            onLinkAdded={(newLink) => setLinks((prev) => [newLink, ...prev])}
+          />
+        </div>
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
