@@ -50,6 +50,22 @@ export default function LinksPage() {
     }
   };
 
+  const handleCategoryChange = async (linkId: string, category: string) => {
+    try {
+      const response = await fetch("/api/links", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ linkId, category }),
+      });
+
+      if (!response.ok) throw new Error("Failed to delete link");
+      await fetchLinks();
+    } catch (err) {
+      console.error("Error deleting link:", err);
+      setError("Failed to delete link.");
+    }
+  };
+
   const filteredLinks = links.filter((link) =>
     link.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -81,7 +97,12 @@ export default function LinksPage() {
             </p>
           ) : (
             filteredLinks.map((link) => (
-              <LinkItem key={link.id} link={link} onDelete={handleDelete} />
+              <LinkItem
+                key={link.id}
+                link={link}
+                handleDelete={handleDelete}
+                handleCategoryChange={handleCategoryChange}
+              />
             ))
           )}
         </ul>

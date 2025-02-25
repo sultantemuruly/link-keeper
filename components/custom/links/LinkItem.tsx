@@ -15,16 +15,23 @@ import {
   SelectTrigger,
   SelectValue,
   SelectItem,
+  SelectLabel,
+  SelectGroup,
 } from "@/components/ui/select";
 import { Trash2 } from "lucide-react";
 import { Link } from "./types";
 
 interface LinkItemProps {
   link: Link;
-  onDelete: (id: string) => Promise<void>;
+  handleDelete: (id: string) => Promise<void>;
+  handleCategoryChange: (id: string, value: string) => Promise<void>;
 }
 
-export function LinkItem({ link, onDelete }: LinkItemProps) {
+export function LinkItem({
+  link,
+  handleDelete,
+  handleCategoryChange,
+}: LinkItemProps) {
   return (
     <li className="p-3 border-b flex justify-between items-center hover:bg-gray-50 transition-colors">
       <div className="flex-1">
@@ -42,24 +49,30 @@ export function LinkItem({ link, onDelete }: LinkItemProps) {
       </div>
       <div className="flex items-center gap-4">
         <div>
-          <Select defaultValue={link.category || "None"}>
+          <Select
+            defaultValue={link.category || "None"}
+            onValueChange={(value) => handleCategoryChange(link.id, value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="None">None</SelectItem>
-              <SelectItem value="Work">Work</SelectItem>
-              <SelectItem value="Personal">Personal</SelectItem>
-              <SelectItem value="Education">Education</SelectItem>
-              <SelectItem value="Entertainment">Entertainment</SelectItem>
-              <SelectItem value="Music">Music</SelectItem>
-              <SelectItem value="Youtube">Youtube</SelectItem>
-              <SelectItem value="Inspiration">Inspiration</SelectItem>
-              <SelectItem value="Sport">Sport</SelectItem>
-              <SelectItem value="Fun">Fun</SelectItem>
-              <SelectItem value="Hobby">Hobby</SelectItem>
-              <SelectItem value="Style">Style</SelectItem>
-              <SelectItem value="Other">Other</SelectItem>
+              <SelectGroup>
+                <SelectLabel>Category</SelectLabel>
+                <SelectItem value="None">None</SelectItem>
+                <SelectItem value="Work">Work</SelectItem>
+                <SelectItem value="Personal">Personal</SelectItem>
+                <SelectItem value="Education">Education</SelectItem>
+                <SelectItem value="Entertainment">Entertainment</SelectItem>
+                <SelectItem value="Music">Music</SelectItem>
+                <SelectItem value="Youtube">Youtube</SelectItem>
+                <SelectItem value="Inspiration">Inspiration</SelectItem>
+                <SelectItem value="Sport">Sport</SelectItem>
+                <SelectItem value="Fun">Fun</SelectItem>
+                <SelectItem value="Hobby">Hobby</SelectItem>
+                <SelectItem value="Style">Style</SelectItem>
+                <SelectItem value="Other">Other</SelectItem>
+              </SelectGroup>
             </SelectContent>
           </Select>
         </div>
@@ -78,7 +91,7 @@ export function LinkItem({ link, onDelete }: LinkItemProps) {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => onDelete(link.id)}>
+                <AlertDialogAction onClick={() => handleDelete(link.id)}>
                   Continue
                 </AlertDialogAction>
               </AlertDialogFooter>

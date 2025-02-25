@@ -115,3 +115,48 @@ export async function DELETE(req: Request) {
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const body = await req.json();
+    const { linkId, category } = body;
+
+    if (!linkId) {
+      return new NextResponse("Missing linkId", { status: 400 });
+    }
+
+    const link = await prisma.link.findUnique({
+      where: { id: linkId },
+    });
+
+    if (!link) {
+      return new NextResponse("Link not found", { status: 404 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { clerkId: userId },
+    });
+
+    if (!user || link.userId !== user.id) {
+      return new NextResponse("Unauthorized to update this link", {
+        status: 403,
+      });
+    }
+
+    const updatedLink = await prisma.link.update({
+      where: { id: linkId },
+      data: { category },
+    });
+
+    return NextResponse.json(updatedLink);
+  } catch (error) {
+    console.error("[LINKS_PUT]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
