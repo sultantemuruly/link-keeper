@@ -34,7 +34,7 @@ export function LinkItem({
   handleCategoryChange,
 }: LinkItemProps) {
   return (
-    <li className="p-3 border-b flex justify-between items-center hover:bg-gray-50 transition-colors">
+    <li className="p-3 border-b flex flex-col justify-center items-center md:flex-row md:justify-between hover:bg-gray-50 transition-colors gap-2">
       <div className="flex-1">
         <a
           href={link.url}
@@ -48,7 +48,7 @@ export function LinkItem({
           <p className="text-sm text-gray-600">{link.description}</p>
         )}
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-4">
         <div>
           <Select
             defaultValue={link.category}
@@ -69,7 +69,7 @@ export function LinkItem({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex flex-col items-end gap-2 ml-4">
+        <div className="flex flex-col items-center md:items-end gap-2 ml-4">
           <AlertDialog>
             <AlertDialogTrigger className="flex items-center gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 py-2 px-4 rounded-sm transition-colors">
               <Trash2 size={16} />

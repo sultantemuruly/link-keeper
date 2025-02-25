@@ -87,12 +87,10 @@ export default function LinksPage() {
 
   return (
     <div className="pt-10 px-10 md:px-20">
-      <div className="flex justify-between items-center">
-        <h1 className="text-lg md:text-2xl font-semibold md:font-bold">
-          Your Links
-        </h1>
+      <div className="flex flex-col gap-2 md:flex-row justify-between items-center">
+        <h1 className="text-lg md:text-xl font-semibold">Your Links</h1>
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
-        <div className="flex items-center gap-10">
+        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-10">
           <FilterBy handleFilterCategory={handleFilterCategory} />
           <AddLinkDialog
             onLinkAdded={(newLink) => setLinks((prev) => [newLink, ...prev])}

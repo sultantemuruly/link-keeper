@@ -36,7 +36,7 @@ export function FilterBy({ handleFilterCategory }: CategoryFilterProps) {
           className="flex items-center text-xl"
           onClick={() => setOpen(true)}
         >
-          <div className="text-md md:text-xl font-medium">Category Filter</div>
+          <div className="text-sm md:text-md font-medium">Category Filter</div>
           <SlidersHorizontal strokeWidth={3} />
         </Button>
       </DialogTrigger>

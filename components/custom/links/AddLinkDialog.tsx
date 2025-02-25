@@ -86,7 +86,7 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
           className="flex items-center text-xl"
           onClick={() => setOpen(true)}
         >
-          <div className="text-md md:text-xl font-medium">Add</div>
+          <div className="text-sm md:text-md font-medium">Add</div>
           <Plus strokeWidth={3} />
         </Button>
       </DialogTrigger>
