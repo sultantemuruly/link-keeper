@@ -17,10 +17,15 @@ export default function LinksPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filterCategory, setFilterCategory] = useState<string>("None");
 
+  const baseURL =
+    process.env.NEXT_PUBLIC_TEST === "true"
+      ? "/"
+      : process.env.NEXT_PUBLIC_BASE_URL;
+
   const fetchLinks = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/links");
+      const response = await fetch(`${baseURL}api/links`);
       if (!response.ok) throw new Error("Failed to fetch links");
       const data = await response.json();
       setLinks(data);
@@ -38,7 +43,7 @@ export default function LinksPage() {
 
   const handleDelete = async (linkId: string) => {
     try {
-      const response = await fetch("/api/links", {
+      const response = await fetch(`${baseURL}api/links`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ linkId }),
@@ -54,7 +59,7 @@ export default function LinksPage() {
 
   const handleCategoryChange = async (linkId: string, category: string) => {
     try {
-      const response = await fetch("/api/links", {
+      const response = await fetch(`${baseURL}api/links`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ linkId, category }),

@@ -47,6 +47,11 @@ interface AddLinkDialogProps {
 
 export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
   const [open, setOpen] = useState(false);
+  const baseURL =
+    process.env.NEXT_PUBLIC_TEST === "true"
+      ? "/"
+      : process.env.NEXT_PUBLIC_BASE_URL;
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -59,7 +64,7 @@ export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
 
   const onSubmit = async (values: LinkFormData) => {
     try {
-      const response = await fetch("/api/links", {
+      const response = await fetch(`${baseURL}api/links`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
