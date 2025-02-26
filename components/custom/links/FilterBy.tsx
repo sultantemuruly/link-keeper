@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 
 import {
@@ -26,7 +25,13 @@ interface CategoryFilterProps {
 }
 
 export function FilterBy({ handleFilterCategory }: CategoryFilterProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [currentCategory, setCurrentCategory] = useState<string>("");
+
+  const handleCategoryChange = async (value: string) => {
+    setCurrentCategory(value);
+    await handleFilterCategory(value);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -44,8 +49,8 @@ export function FilterBy({ handleFilterCategory }: CategoryFilterProps) {
         <DialogHeader>
           <DialogTitle className="py-4">Filter By Category</DialogTitle>
           <Select
-            defaultValue={"None"}
-            onValueChange={(value) => handleFilterCategory(value)}
+            defaultValue={currentCategory || "None"}
+            onValueChange={(value) => handleCategoryChange(value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select categories" />
@@ -61,9 +66,6 @@ export function FilterBy({ handleFilterCategory }: CategoryFilterProps) {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <DialogFooter className="py-2">
-            <Button>Filter</Button>
-          </DialogFooter>
         </DialogHeader>
       </DialogContent>
     </Dialog>
