@@ -42,7 +42,7 @@ const formSchema = z.object({
 });
 
 interface AddLinkDialogProps {
-  onLinkAdded: (newLink: any) => void;
+  onLinkAdded: (newLink: LinkFormData) => void;
 }
 
 export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {

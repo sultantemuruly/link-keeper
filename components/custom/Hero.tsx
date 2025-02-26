@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const Hero = () => {
   return (
     <div className="pt-20 px-10 md:px-20 flex flex-col gap-10 justify-center md:flex-row">
@@ -12,9 +14,11 @@ const Hero = () => {
         </p>
       </div>
       <div className="flex justify-center lg:w-1/2 hover:scale-105 transition-all duration-300 ease-in-out">
-        <img
-          src="image1.svg"
+        <Image
+          src="/image1.svg"
           alt="image"
+          width={512}
+          height={512}
           className="w-[512px] min-w-[256px] max-w-full flex-shrink-0 object-contain"
         />
       </div>
