@@ -80,7 +80,9 @@ export default function LinksPage() {
       filterCategory &&
       filterCategory.trim() !== "" &&
       filterCategory.toLowerCase() !== "none"
-        ? link.category.toLowerCase().includes(filterCategory.toLowerCase())
+        ? link.category
+            ?.toLowerCase()
+            ?.includes(filterCategory.toLowerCase()) ?? false
         : true;
     return titleMatch && categoryMatch;
   });

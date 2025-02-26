@@ -31,7 +31,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
-import { LinkFormData } from "./types";
+import { Link, LinkFormData } from "./types";
 import { Categories } from "./constants";
 
 const formSchema = z.object({
@@ -42,7 +42,7 @@ const formSchema = z.object({
 });
 
 interface AddLinkDialogProps {
-  onLinkAdded: (newLink: LinkFormData) => void;
+  onLinkAdded: (newLink: Link) => void;
 }
 
 export function AddLinkDialog({ onLinkAdded }: AddLinkDialogProps) {
